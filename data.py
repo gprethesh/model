@@ -65,43 +65,43 @@ def hash_file(file_path):
     return hasher.hexdigest()
 
 
-def process_folders_and_store_hash(main_folder, output_folder, csv_file_path):
-    with open(csv_file_path, "w", newline="") as csvfile:
-        csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["File Name", "Hash"])
+# def process_folders_and_store_hash(main_folder, output_folder, csv_file_path):
+#     with open(csv_file_path, "w", newline="") as csvfile:
+#         csv_writer = csv.writer(csvfile)
+#         csv_writer.writerow(["File Name", "Hash"])
 
-        for folder_name in os.listdir(main_folder)[
-            :10
-        ]:  # Limit to a maximum of 10 folders
-            folder_path = os.path.join(main_folder, folder_name)
-            if os.path.isdir(folder_path):
-                # Convert the folder into a 10MB zip file
-                zip_file_path = convert_to_10mb_zip(folder_path, output_folder)
-                print(f"Converted '{folder_name}' to '{zip_file_path}'")
+#         for folder_name in os.listdir(main_folder)[
+#             :10
+#         ]:  # Limit to a maximum of 10 folders
+#             folder_path = os.path.join(main_folder, folder_name)
+#             if os.path.isdir(folder_path):
+#                 # Convert the folder into a 10MB zip file
+#                 zip_file_path = convert_to_10mb_zip(folder_path, output_folder)
+#                 print(f"Converted '{folder_name}' to '{zip_file_path}'")
 
-                # Validate the uploaded file for malware
-                if validate_uploaded_file(zip_file_path):
-                    # Upload the zip file to cloud storage
-                    cloud_storage_folder = "Upload_Zips"
-                    cloud_file_path = upload_to_cloud_storage(
-                        zip_file_path, cloud_storage_folder
-                    )
+#                 # Validate the uploaded file for malware
+#                 if validate_uploaded_file(zip_file_path):
+#                     # Upload the zip file to cloud storage
+#                     cloud_storage_folder = "Upload_Zips"
+#                     cloud_file_path = upload_to_cloud_storage(
+#                         zip_file_path, cloud_storage_folder
+#                     )
 
-                    # Hash the cloud file and store in CSV file
-                    file_hash = hash_file(cloud_file_path)
-                    csv_writer.writerow([os.path.basename(cloud_file_path), file_hash])
-                    print(f"Hashed '{cloud_file_path}' with SHA-256: {file_hash}")
-                else:
-                    print(
-                        f"File '{zip_file_path}' contains malware and will be skipped."
-                    )
-
-
-# Specify your Google Drive folder and local destination
-drive_folder = "Archive"
-output_folder = "Upload_Zips"
-csv_file_path = "hashed_files.csv"
+#                     # Hash the cloud file and store in CSV file
+#                     file_hash = hash_file(cloud_file_path)
+#                     csv_writer.writerow([os.path.basename(cloud_file_path), file_hash])
+#                     print(f"Hashed '{cloud_file_path}' with SHA-256: {file_hash}")
+#                 else:
+#                     print(
+#                         f"File '{zip_file_path}' contains malware and will be skipped."
+#                     )
 
 
-# Process folders, convert to 10MB zip, hash, and store in CSV
-process_folders_and_store_hash(drive_folder, output_folder, csv_file_path)
+# # Specify your Google Drive folder and local destination
+# drive_folder = "Archive"
+# output_folder = "Upload_Zips"
+# csv_file_path = "hashed_files.csv"
+
+
+# # Process folders, convert to 10MB zip, hash, and store in CSV
+# process_folders_and_store_hash(drive_folder, output_folder, csv_file_path)

@@ -1,14 +1,13 @@
 import socket
 import json
+import config
 
 
-def send_data_to_miner_pool(job_id, miner_pool_wallet, validator_wallet, job_details):
+def send_data_to_miner_pool(job_id, miner_wallet_address):
     # Data to be sent
     data = {
         "job_id": job_id,
-        "miner_pool_wallet": miner_pool_wallet,
-        "validator_wallet": validator_wallet,
-        "job_details": job_details,
+        "miner_wallet_address": miner_wallet_address,
     }
     serialized_data = json.dumps(data)
 
@@ -36,12 +35,8 @@ def send_data_to_miner_pool(job_id, miner_pool_wallet, validator_wallet, job_det
 
 
 job_id = "12345"
-miner_pool_wallet = "miner_wallet_idx"
-validator_wallet = "wallet4"
-job_details = {"detail_key": "detail_value"}
+miner_wallet_address = config.WALLET_ADDRESS
 
-response = send_data_to_miner_pool(
-    job_id, miner_pool_wallet, validator_wallet, job_details
-)
+response = send_data_to_miner_pool(job_id, miner_wallet_address)
 
 print("Response from inode:", response)

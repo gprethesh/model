@@ -15,6 +15,7 @@ def handle_client(client_socket, client_address):
         data = client_socket.recv(BUFFER_SIZE).decode("utf-8")
         data = json.loads(data)
 
+        print("DATA FROM client", data)
         response_message = "Data processed successfully"
         client_socket.send(response_message.encode("utf-8"))
     except Exception as e:

@@ -33,9 +33,10 @@ from validate_and_allocate_rewards import validate_model
 from train_and_contribute import train_and_contribute
 from create_minor_pool import create_miner_pool
 from train_model import train_model
+from data import convert_to_10mb_zip
 
 
-def run_system():
+def run_system(main_folder, output_folder, csv_file_path):
     # Connect to the Redis server
     redis_client = redis.StrictRedis(
         host="redis-13225.c1.asia-northeast1-1.gce.cloud.redislabs.com",
@@ -43,6 +44,18 @@ def run_system():
         password="081zfCxu7ZI8NHW7cEHr8sPFyGToo7pR",
         decode_responses=True,
     )
+
+    with open(csv_file_path, "w", newline="") as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["File Name", "Hash"])
+
+        for folder_name in os.listdir(main_folder)[
+            :10
+        ]:  # Limit to a maximum of 10 folders
+            folder_path = os.path.join(main_folder, folder_name)
+            if os.path.isdir(folder_path):
+                # Convert the folder into a 10MB zip file
+                zip_file_path = convert_to_10mb_zip(folder_path, output_folder)
 
     class SimpleModel(nn.Module):
         def __init__(self):
@@ -77,5 +90,10 @@ def run_system():
     )
 
 
+drive_folder = "Archive"
+output_folder = "Upload_Zips"
+csv_file_path = "hashed_files.csv"
+
+
 # Run the entire system
-run_system()
+run_system(drive_folder, output_folder, csv_file_path)
