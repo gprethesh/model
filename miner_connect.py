@@ -12,14 +12,7 @@ import shutil
 import time
 from load_data import load_data
 from inode import vote_for_inode
-from miner_connect import cleanup_after_training
-from miner_connect import did_miner_extract
-from miner_connect import remove_inactive_miner
-from miner_connect import hash_and_update_database
-from miner_connect import simulate_file_request
-from miner_connect import miner_connect
-from miner_connect import request_10mb_zip
-from miner_connect import is_miner_eligible
+
 from stakes import stake_tokens_and_nominate_validator
 from validate_and_allocate_rewards import validate_and_allocate_rewards
 from validate_and_allocate_rewards import is_model_approved_by_validators
