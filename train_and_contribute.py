@@ -5,6 +5,8 @@ import redis
 import json
 from load_data import load_data
 from train_model import train_model
+
+
 class SimpleModel(nn.Module):
     def __init__(self):
         super(SimpleModel, self).__init__()
@@ -12,6 +14,8 @@ class SimpleModel(nn.Module):
 
     def forward(self, x):
         return self.fc(x)
+
+
 def train_and_contribute(miner_id, global_model, zip_file_path, redis_client):
     # Simulate loading data from the processed zip file
     data_loader = load_data(zip_file_path)

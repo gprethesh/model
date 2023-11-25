@@ -36,13 +36,6 @@ from train_model import train_model
 
 
 def run_system():
-    # Connect to Redis server
-    r = redis.Redis(
-        host="redis-13225.c1.asia-northeast1-1.gce.cloud.redislabs.com",
-        port=13225,
-        password="081zfCxu7ZI8NHW7cEHr8sPFyGToo7pR",
-    )
-
     # Connect to the Redis server
     redis_client = redis.StrictRedis(
         host="redis-13225.c1.asia-northeast1-1.gce.cloud.redislabs.com",

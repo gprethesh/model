@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import shutil
+
+
 def train_model(model, data_loader):
     criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01)
@@ -14,5 +16,3 @@ def train_model(model, data_loader):
             loss = criterion(outputs, targets)
             loss.backward()
             optimizer.step()
-
-
