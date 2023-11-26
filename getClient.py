@@ -10,30 +10,23 @@ r = redis.StrictRedis(
 )
 
 
-def update_job_data(job_id, file_hash, sub_key, sub_value):
-    # Retrieve the JSON string for the specified file_hash
+def update_job_data(job_id, file_hash, field, new_value):
+    # Get the JSON string stored in Redis for the specific file_hash
     json_data = r.hget(job_id, file_hash)
     if json_data:
-        # Deserialize the JSON string into a Python dictionary
+        # Deserialize the JSON string to a Python dictionary
         data = json.loads(json_data)
-
-        # Modify the specified sub_key value
-        if sub_key in data:
-            # Assuming the value is a comma-separated string, split it into a list
-            values = data[sub_key].split(", ")
-            # Modify the specific value
-            values = [v if "wallet9" not in v else "wallet9:true" for v in values]
-            # Join the list back into a string
-            data[sub_key] = ", ".join(values)
-
-            # Serialize the dictionary back to a JSON string
-            updated_json_data = json.dumps(data)
-            # Store the updated JSON string in Redis
-            r.hset(job_id, file_hash, updated_json_data)
-            return True
-    return False
+        # Update the specified field with the new value
+        data[field] = new_value
+        # Serialize the updated data back to a JSON string
+        updated_json_data = json.dumps(data)
+        # Store the updated JSON string in Redis
+        r.hset(job_id, file_hash, updated_json_data)
+    else:
+        print(f"No data found for file hash: {file_hash}")
 
 
-# Example usage: Update file-hash3 -> extracted -> wallet9 to true
-update_success = update_job_data("job12345", "file-hash3", "extracted", "wallet9:true")
+# Update the 'extracted' field of 'file-hash3' in 'job12345' to True
+update_success = update_job_data("job12345", "file-hash3", "extracted", True)
+
 print(f"Update successful: {update_success}")
