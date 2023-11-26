@@ -1,4 +1,5 @@
 import redis
+import json
 
 # Connect to Redis
 r = redis.StrictRedis(
@@ -11,27 +12,21 @@ r = redis.StrictRedis(
 
 def create_job(job_id, file_hashes):
     for file_hash, data in file_hashes.items():
-        hash_key = f"{job_id}:{file_hash}"
-
-        # Store wallet, downloaded, extracted, gradient data
-        for key, value in data.items():
-            r.hset(hash_key, key, value)
+        # Serialize the data to a JSON string
+        json_data = json.dumps(data)
+        # Store the JSON string under the job_id hash with the file_hash as the field
+        r.hset(job_id, file_hash, json_data)
 
 
 def get_job_data(job_id, file_hashes):
     retrieved_data = {}
     for file_hash in file_hashes:
-        # Construct the key for the job file hash
-        job_file_key = f"job:{job_id}:{file_hash}"
-
-        # Get the hash data
-        hash_data = r.hgetall(job_file_key)
-
-        # Decode the data (if needed) and add to the retrieved data
-        # Remove the .decode("utf-8") as it's not needed with decode_responses=True
-        decoded_data = {k: v for k, v in hash_data.items()}
-        retrieved_data[file_hash] = decoded_data
-
+        # Get the JSON string stored in Redis
+        json_data = r.hget(job_id, file_hash)
+        # Deserialize the JSON string back to a Python dictionary
+        if json_data:
+            data = json.loads(json_data)
+            retrieved_data[file_hash] = data
     return retrieved_data
 
 
